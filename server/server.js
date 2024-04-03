@@ -84,7 +84,6 @@ app.get("/", async (req, res) => {
 
     // Perform a keyword search on the page
     const keywordFound = await searchKeyword(url, keyword);
-    console.log("Keyword found:", keywordFound);
 
     res.json({ keywordFound: keywordFound }); // Отправка ответа в формате JSON
   } catch (error) {

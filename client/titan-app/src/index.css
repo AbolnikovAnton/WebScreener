@@ -32,6 +32,10 @@ header {
   ul {
     text-align: left;
 
+    li {
+      list-style-type: circle;
+    }
+
     span {
       color: red;
       font-size: 1.3rem;

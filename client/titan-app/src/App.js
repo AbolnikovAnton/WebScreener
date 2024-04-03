@@ -13,8 +13,11 @@ function App() {
     fetch(`http://localhost:3000/?url=${website}&keyword=${keyword}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        setResult(data.keywordFound);
+        if (data.keywordFound.length === 0) {
+          setResult(["Nothing found"]);
+        } else {
+          setResult(data.keywordFound);
+        }
         setLoading(false);
       })
       .catch((error) => {

@@ -10,7 +10,7 @@ function App() {
   const handleFind = () => {
     setLoading(true);
     setResult([]);
-    fetch(`http://localhost:3000/?url=${website}&keyword=${keyword}`)
+    fetch(`http://localhost:3001/?url=${website}&keyword=${keyword}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.keywordFound.length === 0) {

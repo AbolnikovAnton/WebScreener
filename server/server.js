@@ -2,53 +2,67 @@ const express = require("express");
 const puppeteer = require("puppeteer");
 const cors = require("cors");
 const app = express();
-const port = 3000;
+const port = 3001;
 
 app.use(cors());
 
 // Function to search for a keyword on a page
-// Function to search for a keyword on a page
 async function searchKeyword(url, keyword) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ protocolTimeout: 60000 });
   const page = await browser.newPage();
   await page.goto(url);
 
   // Wait for the page to fully load
   await page.waitForSelector("body");
 
-  // Scroll to the bottom of the page if necessary
-  await autoScroll(page);
+  let keywordFound = [];
+  console.log(keywordFound);
 
-  // Wait for a brief moment to ensure all content is loaded
-  await delay(1000);
+  let oldHeight;
 
-  // Get page content
-  const content = await page.content();
+  while (true) {
+    // Get the current scroll height
+    const newHeight = await page.evaluate(() => document.body.scrollHeight);
 
-  // Break the content into lines
-  const lines = content.split("\n");
+    // Scroll to the bottom of the page
+    await autoScroll(page);
 
-  // An array to store strings that contain the keyword
-  const linesWithKeyword = [];
+    // If scroll height hasn't changed, it means we've reached the end of the content
+    if (newHeight === oldHeight) break;
 
-  // Find the keyword in each line and add it to the array
-  lines.forEach((line) => {
-    line = line.trim(); // Trim whitespace from the line
-    if (line.includes(keyword)) {
-      // Remove HTML tags if any
-      line = line.replace(/<[^>]*>?/gm, "");
-      linesWithKeyword.push(line);
-    }
-  });
+    // Get page content
+    const content = await page.content();
+
+    // Break the content into lines
+    const lines = content.split("\n");
+
+    // Find the keyword in each line and add it to the array
+    const foundKeywords = lines
+      .filter((line) => {
+        const trimmedLine = line.trim();
+        return trimmedLine.includes(keyword);
+      })
+      .map((line) => line.replace(/<[^>]*>?/gm, ""));
+
+    console.log("Sending keywords to client:", foundKeywords);
+
+    keywordFound = keywordFound.concat(foundKeywords);
+
+    // Update the old height for the next iteration
+    oldHeight = newHeight;
+
+    // Wait for a brief moment to ensure all content is loaded
+    await delay(1000);
+  }
 
   await browser.close();
 
-  return linesWithKeyword;
+  return keywordFound;
 }
 
 // Function to introduce delay
 function delay(time) {
-  return new Promise(function (resolve) {
+  return new Promise((resolve) => {
     setTimeout(resolve, time);
   });
 }
@@ -68,7 +82,7 @@ async function autoScroll(page) {
           clearInterval(timer);
           resolve();
         }
-      }, 100);
+      }, 10);
     });
   });
 }
@@ -85,10 +99,10 @@ app.get("/", async (req, res) => {
     // Perform a keyword search on the page
     const keywordFound = await searchKeyword(url, keyword);
 
-    res.json({ keywordFound: keywordFound }); // Отправка ответа в формате JSON
+    res.json({ keywordFound }); // Sending final results in JSON format
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ error: "Internal Server Error" }); // Отправка сообщения об ошибке в формате JSON
+    res.status(500).json({ error: "Internal Server Error" }); // Sending error message in JSON format
   }
 });
 

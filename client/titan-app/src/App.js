@@ -1,22 +1,26 @@
 import "./App.css";
-import { useState } from "react";
+import React, { useState } from "react";
 
 function App() {
   const [website, setWebsite] = useState("");
   const [keyword, setKeyword] = useState("");
   const [result, setResult] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleFind = () => {
-    // Отправка запроса на сервер
+    setLoading(true);
+    setResult([]);
     fetch(`http://localhost:3000/?url=${website}&keyword=${keyword}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
         setResult(data.keywordFound);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error:", error);
         setResult([]);
+        setLoading(false);
       });
   };
 
@@ -44,9 +48,17 @@ function App() {
         </div>
         <button onClick={handleFind}>Find</button>
       </div>
+      {loading && <div className="spinner"></div>}
       <ul>
         {result?.map((item, index) => (
-          <li key={index}>{item}</li>
+          <li key={index}>
+            {item.split(keyword).map((part, i) => (
+              <React.Fragment key={i}>
+                {i > 0 && <span>{keyword}</span>}
+                {part}
+              </React.Fragment>
+            ))}
+          </li>
         ))}
       </ul>
     </div>

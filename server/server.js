@@ -7,13 +7,20 @@ const port = 3000;
 app.use(cors());
 
 // Function to search for a keyword on a page
+// Function to search for a keyword on a page
 async function searchKeyword(url, keyword) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(url);
 
+  // Wait for the page to fully load
+  await page.waitForSelector("body");
+
   // Scroll to the bottom of the page if necessary
   await autoScroll(page);
+
+  // Wait for a brief moment to ensure all content is loaded
+  await delay(1000);
 
   // Get page content
   const content = await page.content();
@@ -26,14 +33,24 @@ async function searchKeyword(url, keyword) {
 
   // Find the keyword in each line and add it to the array
   lines.forEach((line) => {
+    line = line.trim(); // Trim whitespace from the line
     if (line.includes(keyword)) {
-      linesWithKeyword.push(line.trim());
+      // Remove HTML tags if any
+      line = line.replace(/<[^>]*>?/gm, "");
+      linesWithKeyword.push(line);
     }
   });
 
   await browser.close();
 
   return linesWithKeyword;
+}
+
+// Function to introduce delay
+function delay(time) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, time);
+  });
 }
 
 // Function to automatically scroll the page to the end

@@ -1,11 +1,23 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function App() {
   const [website, setWebsite] = useState("");
   const [keyword, setKeyword] = useState("");
   const [result, setResult] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const eventSource = new EventSource("http://localhost:3001/subscribe");
+    eventSource.onmessage = (event) => {
+      const newData = JSON.parse(event.data).keywordFound;
+      setResult((prevData) => [...prevData, ...newData]);
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, []);
 
   const handleFind = () => {
     setLoading(true);

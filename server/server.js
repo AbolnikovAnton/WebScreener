@@ -6,8 +6,11 @@ const port = 3001;
 
 app.use(cors());
 
+// Array to store clients
+let clients = [];
+
 // Function to search for a keyword on a page
-async function searchKeyword(url, keyword) {
+async function searchKeyword(url, keyword, res) {
   const browser = await puppeteer.launch({ protocolTimeout: 60000 });
   const page = await browser.newPage();
   await page.goto(url);
@@ -51,13 +54,21 @@ async function searchKeyword(url, keyword) {
     // Update the old height for the next iteration
     oldHeight = newHeight;
 
+    // Notify all clients about the new data
+    clients.forEach((client) => {
+      client.write(
+        `data: ${JSON.stringify({ keywordFound: keywordFound })}\n\n`
+      );
+    });
+
     // Wait for a brief moment to ensure all content is loaded
     await delay(1000);
   }
 
   await browser.close();
 
-  return keywordFound;
+  // Send final response to the client
+  res.json({ keywordFound });
 }
 
 // Function to introduce delay
@@ -96,14 +107,30 @@ app.get("/", async (req, res) => {
     console.log("Received request with URL:", url);
     console.log("Received request with keyword:", keyword);
 
-    // Perform a keyword search on the page
-    const keywordFound = await searchKeyword(url, keyword);
-
-    res.json({ keywordFound }); // Sending final results in JSON format
+    // Perform a keyword search on the page and send updates using SSE
+    await searchKeyword(url, keyword, res);
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal Server Error" }); // Sending error message in JSON format
   }
+});
+
+// Route for clients to subscribe to updates
+app.get("/subscribe", (req, res) => {
+  res.set({
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+  });
+  res.flushHeaders();
+
+  // Add client to the list
+  clients.push(res);
+
+  // Remove client when connection is closed
+  req.on("close", () => {
+    clients = clients.filter((client) => client !== res);
+  });
 });
 
 app.listen(port, () => {

@@ -6,7 +6,8 @@
 
 # development server environment
 /.cache
-/public
+/public/*
+!/public/index.html
 
 # IDE and editor files
 /.idea

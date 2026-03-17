@@ -1,76 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap");
+
+:root {
+  --text: #112a46;
+  --text-soft: #45617d;
+  --accent-strong: #0f766e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: "Space Grotesk", "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 184, 77, 0.3), transparent 34%),
+    radial-gradient(circle at 88% 82%, rgba(79, 209, 197, 0.32), transparent 34%),
+    linear-gradient(160deg, #f6f8fc, #edf2f7 48%, #eff8f6);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-
-header {
-  margin: 25px;
-}
-
-.App {
-  button {
-    margin: 2rem;
-    padding: 0.75em 1.5em;
-    cursor: pointer;
-    transition: box-shadow 200ms linear;
-  }
-
-  button:hover {
-    box-shadow: 0 0.5em 1em 0 rgba(0, 0, 0, 0.15),
-      0 0.4em 0.5em -0.4em rgba(0, 0, 0, 0.4);
-  }
-
-  ul {
-    text-align: left;
-
-    li {
-      list-style-type: circle;
-    }
-
-    span {
-      color: red;
-      font-size: 1.3rem;
-      background-color: rgba(255, 255, 226, 0.822);
-      font-weight: bold;
-    }
-  }
-}
-
-.website,
-.keyword {
-  input {
-    width: 500px;
-  }
-  input:hover {
-    background-color: rgb(255, 255, 250);
-  }
-}
-
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 5px solid #fff;
-  border-bottom-color: #ff3d00;
-  border-radius: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-}
-
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }

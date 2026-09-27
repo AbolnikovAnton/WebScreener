@@ -2,12 +2,11 @@
 /node_modules
 
 # production build
-/build
+/dist
 
-# development server environment
-/.cache
-/public/*
-!/public/index.html
+# local environment
+.env.local
+.env.*.local
 
 # IDE and editor files
 /.idea
@@ -17,5 +16,3 @@
 
 # logs
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*

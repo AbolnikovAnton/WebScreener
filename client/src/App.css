@@ -89,6 +89,27 @@ button:disabled {
   opacity: 0.6;
 }
 
+button.secondary {
+  color: var(--text);
+  background: #fff;
+  border: 1px solid rgba(12, 34, 61, 0.2);
+}
+
+button.secondary:hover:enabled {
+  box-shadow: 0 6px 14px rgba(12, 34, 61, 0.12);
+}
+
+button:focus-visible {
+  outline: 3px solid rgba(0, 125, 122, 0.45);
+  outline-offset: 2px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .statusRow {
   display: inline-flex;
   align-items: center;
@@ -125,6 +146,19 @@ button:disabled {
   margin-bottom: 0.5rem;
 }
 
+.notice {
+  margin: 0 0 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  background: #eef6ff;
+  color: #1d4f80;
+}
+
+.empty {
+  margin: 0;
+  color: var(--text-soft);
+}
+
 .results ul {
   margin: 0;
   padding-left: 1.2rem;
@@ -133,6 +167,7 @@ button:disabled {
 .results li {
   margin-bottom: 0.65rem;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 mark {
@@ -147,8 +182,8 @@ mark {
     padding-top: 2rem;
   }
 
-  button {
-    width: 100%;
+  .actions button {
+    flex: 1;
   }
 }
 

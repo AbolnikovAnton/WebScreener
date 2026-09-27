@@ -1,20 +1,22 @@
 {
-  "name": "titan",
+  "name": "web-screener-server",
   "version": "1.0.0",
-  "description": "test-app",
-  "main": "index.js",
+  "description": "Keyword scanner backend: Express + Puppeteer + SSE",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test --test-concurrency=1 --test-force-exit",
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "puppeteer": "^22.6.1"
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "puppeteer": "^25.12.0"
   },
-  "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21"
+  "type": "module",
+  "engines": {
+    "node": ">=20.12"
   }
 }

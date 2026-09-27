@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Infinite feed fixture</title>
+    <style>
+      .item { height: 120px; }
+    </style>
+  </head>
+  <body>
+    <h1>Feed</h1>
+    <div id="feed"></div>
+    <iframe srcdoc="<p>NEEDLE inside a frame</p>" title="frame"></iframe>
+    <script>
+      // Loads 20 items at a time, but only once the reader is near the
+      // bottom — like a real social feed. 6 batches, 120 items in total.
+      const TOTAL_BATCHES = 6;
+      const feed = document.getElementById("feed");
+      let batch = 0;
+      let loading = false;
+
+      function addBatch() {
+        for (let i = 0; i < 20; i += 1) {
+          const n = batch * 20 + i;
+          const item = document.createElement("div");
+          item.className = "item";
+          item.textContent = n % 10 === 5 ? `Needle item ${n}` : `Plain item ${n}`;
+          feed.appendChild(item);
+        }
+        batch += 1;
+      }
+
+      addBatch();
+
+      window.addEventListener("scroll", () => {
+        if (loading || batch >= TOTAL_BATCHES) return;
+        const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 200;
+        if (nearBottom) {
+          loading = true;
+          setTimeout(() => {
+            addBatch();
+            loading = false;
+          }, 300);
+        }
+      });
+    </script>
+  </body>
+</html>

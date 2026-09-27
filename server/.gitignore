@@ -9,3 +9,6 @@
 
 # runtime data
 /logs
+
+# Chrome downloaded by Puppeteer (see .puppeteerrc.cjs)
+/.cache

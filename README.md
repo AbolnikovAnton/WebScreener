@@ -68,6 +68,32 @@ example file and edit it:
 To scan pages on your own machine (e.g. `http://localhost:8080`), start the
 server with `ALLOW_PRIVATE_HOSTS=true`. Never enable it on a public server.
 
+## Deploying to Render
+
+**API — Web Service**
+
+| Setting        | Value         |
+| -------------- | ------------- |
+| Root Directory | `server`      |
+| Build Command  | `npm ci`      |
+| Start Command  | `npm start`   |
+
+Environment: `CHROME_NO_SANDBOX=true`, `TRUST_PROXY=true`,
+`CORS_ORIGIN=<front-end URL>`, and `MAX_CONCURRENT_SCANS=1` on the 512 MB
+free plan. Puppeteer installs Chrome into `server/.cache` (see
+`server/.puppeteerrc.cjs`) so it ships with the service.
+
+**UI — Static Site**
+
+| Setting           | Value                          |
+| ----------------- | ------------------------------ |
+| Root Directory    | `client`                       |
+| Build Command     | `npm ci && npm run build`      |
+| Publish Directory | `dist`                         |
+
+Environment: `VITE_API_URL=<API URL>`. It is baked in at build time, so
+redeploy the site after changing it.
+
 ## Tests
 
 ```bash
